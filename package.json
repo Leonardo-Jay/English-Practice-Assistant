@@ -1,0 +1,118 @@
+{
+  "name": "new-practice-english",
+  "private": true,
+  "version": "1.0.0",
+  "description": "English speaking practice agent with voice conversation",
+  "main": "out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "dev:community": "electron-vite dev --mode community",
+    "dev:debug": "cross-env ELECTRON_ENABLE_LOGGING=true ELECTRON_LOG_FILE=electron_debug.log electron-vite dev",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run && node --test scripts/public-boundary.test.cjs",
+    "smoke:sqlite": "electron scripts/sqlite-smoke.cjs",
+    "smoke:services": "node scripts/run-service-smoke.cjs",
+    "smoke:ui": "npm run build && electron scripts/ui-smoke.cjs",
+    "smoke:nsis": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke-nsis.ps1",
+    "diagnose:analysis": "electron scripts/diagnose-analysis.cjs",
+    "rebuild:native": "node scripts/ensure-sqlite-native.cjs",
+    "check:public": "node scripts/check-public-boundary.cjs",
+    "export:public": "node scripts/export-public-source.cjs",
+    "build": "electron-vite build --mode community && node scripts/check-public-boundary.cjs --build",
+    "preview": "electron-vite preview",
+    "dist:portable": "npm run rebuild:native && npm run build && powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-portable.ps1",
+    "dist:win": "npm run rebuild:native && npm run build && node scripts/package-windows.cjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "dependencies": {
+    "7zip-bin": "5.2.0",
+    "adm-zip": "^0.5.18",
+    "better-sqlite3": "^12.11.1",
+    "cheerio": "^1.2.0",
+    "iconv-lite": "^0.7.2",
+    "node-unrar-js": "2.0.2",
+    "sherpa-onnx-node": "^1.13.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.1",
+    "@types/adm-zip": "^0.5.8",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.7.0",
+    "autoprefixer": "^10.5.2",
+    "cross-env": "^10.1.0",
+    "electron": "^33.0.0",
+    "electron-builder": "^26.15.3",
+    "electron-vite": "^5.0.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "tailwindcss": "^4.3.1",
+    "typescript": "^6.0.3",
+    "vitest": "^3.2.4"
+  },
+  "build": {
+    "appId": "com.leofzzf.english-practice-assistant",
+    "productName": "英语练习助手",
+    "artifactName": "EnglishPracticeAssistant-Setup-${version}.${ext}",
+    "electronDist": "node_modules/electron/dist",
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/sherpa-onnx-node/**/*",
+      "node_modules/sherpa-onnx-win-x64/**/*",
+      "node_modules/better-sqlite3/**/*",
+      "node_modules/node-unrar-js/**/*"
+    ],
+    "files": [
+      "out/main/**/*",
+      "out/preload/**/*",
+      "out/renderer/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "node_modules/7zip-bin/win/x64/7za.exe",
+        "to": "subtitle-tools/7za.exe"
+      },
+      {
+        "from": "node_modules/7zip-bin/LICENSE.txt",
+        "to": "subtitle-tools/7zip-bin-LICENSE.txt"
+      },
+      {
+        "from": "node_modules/node-unrar-js/LICENSE.md",
+        "to": "subtitle-tools/node-unrar-js-LICENSE.md"
+      }
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "executableName": "EnglishPracticeAssistant",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "英语练习助手",
+      "deleteAppDataOnUninstall": false,
+      "include": "build/installer.nsh"
+    },
+    "electronLanguages": [
+      "zh-CN",
+      "en-US"
+    ],
+    "npmRebuild": false
+  }
+}

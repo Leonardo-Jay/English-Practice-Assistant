@@ -1,0 +1,43 @@
+# Closed-source extensions and all generated public export trees.
+/private/
+/public-source/
+
+# Dependencies, build products, model weights and local application data.
+/node_modules/
+/out/
+/out-private/
+/dist/
+/release/
+/build-cache/
+/data/
+/models/
+/coverage/
+*.log
+*.db
+*.db-*
+*.sqlite*
+*.bak
+*.onnx
+*.safetensors
+
+# Local credentials, provider settings and Chromium profiles.
+.env
+.env.*
+!.env.example
+config.json
+llm-profiles*.json
+*.pem
+*.key
+**/Local Storage/
+**/Session Storage/
+**/Cookies*
+
+# Local development notes and machine-specific tooling.
+/.codex/
+/.agents/
+/.aws/
+/openspec/
+/.npmrc
+/大模型接口.txt
+/2808
+
